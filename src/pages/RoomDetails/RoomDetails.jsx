@@ -2,29 +2,28 @@ import Container from '../../components/Shared/Container'
 import { Helmet } from 'react-helmet-async'
 import RoomReservation from '../../components/RoomDetails/RoomReservation'
 import Heading from '../../components/Shared/Heading'
+import { useQuery } from '@tanstack/react-query'
+import LoadingSpinner from '../../components/Shared/LoadingSpinner'
+import { useParams } from 'react-router-dom'
+import useAxiosCommon from '../../hooks/useAxiosCommon'
 
 // single room object (Fake Data)
-const room = {
-  location: 'Pattaya, Thailand',
-  category: 'Beach',
-  title: 'A15 thebase Sky Pool 1 Bedroom 1/1/Downtown Direct Beach',
-  to: '2024-05-21T18:00:00.000Z',
-  from: '2024-05-19T18:00:00.000Z',
-  price: '100',
-  guests: '2',
-  bathrooms: '1',
-  bedrooms: '1',
-  host: {
-    name: 'Shakil Ahmed Atik',
-    image:
-      'https://lh3.googleusercontent.com/a/ACg8ocJL_MZYn95fgATgHT_bWH8Em42gc8quAT57rhhHo4w9-lc-x8G-=s96-c',
-    email: 'shakilatik.ph@gmail.com',
-  },
-  description:
-    'Seamlessly evisculate frictionless e-markets through tactical interfaces. Holisticly visualize viral potentialities without mission-critical services.',
-  image: 'https://i.ibb.co/BsLQWH6/992ceffe-86d2-42b0-93b8-c24427806cca.webp',
-}
+
 const RoomDetails = () => {
+  const {id}=useParams()
+  const axiosCommon = useAxiosCommon();
+
+  const { data: room = {}, isLoading } = useQuery({
+    queryKey: ['room',id],
+    queryFn: async () => {
+      const {data}= await axiosCommon.get(`/room/${id}`);
+      return data;
+    }
+
+  });
+  console.log('room:', room);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <Container>
       <Helmet>
