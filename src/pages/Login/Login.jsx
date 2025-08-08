@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { PiSpinnerBallFill } from "react-icons/pi";
@@ -9,6 +9,8 @@ const Login = () => {
   const { signInWithGoogle, loading, setLoading, signIn , resetPassword} = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
+  const location = useLocation()
+  const from = location?.state || '/'
   const handleSubmit = async (e) => {
     e.preventDefault()
     const from = e.target
@@ -17,7 +19,7 @@ const Login = () => {
     try {
       setLoading(true)
       await signIn(email, password)
-      navigate('/')
+      navigate(from)
       toast.success('User created successfully')
     } catch (error) {
       console.error('Firebase signUp error:', error.code, error.message, error);
@@ -28,7 +30,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle()
-      navigate('/')
+      navigate(from)
       toast.success('User created successfully with Google')
     } catch (error) {
       console.error('Firebase Google signIn error:', error.code, error.message, error);
