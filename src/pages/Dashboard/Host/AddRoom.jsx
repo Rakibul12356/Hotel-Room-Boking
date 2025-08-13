@@ -2,24 +2,46 @@ import { useState } from "react";
 import AddRoomForm from "../../../components/form/AddRoomForm";
 import useAuth from "../../../hooks/useAuth";
 import { imageUpload } from "../../../api/utils";
-
+import { Helmet } from 'react-helmet-async'
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AddRoom = () => {
+  const navigate = useNavigate()
+  const axiosSecure = useAxiosSecure()
   const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
   const [dates, setDates] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: 'selection',
   })
    const [imagePreview, setImagePreview] = useState(null);
-const [imageText, setImageText] = useState('Upload Image')
+   const [imageText, setImageText] = useState('Upload Image')
   //Date range handler
   const handleDates = (item) => {
     console.log(item)
     setDates(item.selection)
   }
+  //post data to db with tanstack query UseMutation
+  
+  const { mutateAsync } = useMutation({
+    mutationFn: async roomData => {
+      const { data } = await axiosSecure.post(`/room`, roomData)
+      return data
+    },
+    onSuccess: () => {
+      console.log('Data Saved Successfully')
+      toast.success('Room Added Successfully!')
+      navigate('/dashboard/my-listings')
+      setLoading(false)
+    },
+  })
   const handleSubmit =async (e) => {
     e.preventDefault()
+    setLoading(true)
     const form = e.target
     const location = form.location.value
     const category = form.category.value
@@ -54,10 +76,13 @@ const [imageText, setImageText] = useState('Upload Image')
         image: image_Url,
         host
       }
+        //   Post request to server
+      await mutateAsync(roomData)
       console.log(roomData)
     }catch (error) {
       console.error( error);
-      return;
+     toast.error(error.message)
+      setLoading(false)
     }
     
   }
@@ -67,15 +92,21 @@ const [imageText, setImageText] = useState('Upload Image')
   }
   return (
   
-      
-      <AddRoomForm 
+      <>
+     <Helmet>
+        <title>Add Room | Dashboard</title>
+      </Helmet>
+        <AddRoomForm 
       dates={dates} 
       handleDates={handleDates} 
       handleSubmit={handleSubmit} 
       imagePreview={imagePreview} 
       setImagePreview={setImagePreview}
       handleImage={handleImage}
-      imageText={imageText}/>
+      imageText={imageText}
+      loading={loading}/>
+      </>
+    
  
   );
 };

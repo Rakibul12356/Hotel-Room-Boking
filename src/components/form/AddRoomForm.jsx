@@ -1,16 +1,16 @@
-
-import { useState } from 'react';
 import { categories } from '../Categories/CategoriesData'
 import { DateRange } from 'react-date-range';
+import PropTypes from 'prop-types';
+import { PiSpinnerBallFill } from 'react-icons/pi';
+
 const AddRoomForm = ({
     dates,
     handleDates,
     handleSubmit,
     imagePreview,
     handleImage,
-    imageText }) => {
-
-
+    imageText,
+loading }) => {
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
             <form onSubmit={handleSubmit} >
@@ -29,7 +29,6 @@ const AddRoomForm = ({
                                 required
                             />
                         </div>
-
                         <div className='space-y-1 text-sm'>
                             <label htmlFor='category' className='block text-gray-600'>
                                 Category
@@ -46,7 +45,6 @@ const AddRoomForm = ({
                                 ))}
                             </select>
                         </div>
-
                         <div className='space-y-1'>
                             <label htmlFor='location' className='block text-gray-600'>
                                 Select Availability Range
@@ -76,7 +74,6 @@ const AddRoomForm = ({
                                 required
                             />
                         </div>
-
                         <div className=' p-4 bg-white w-full  m-auto rounded-lg'>
                             <div className='file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg'>
                                 <div className='flex flex-col w-max mx-auto text-center'>
@@ -87,19 +84,16 @@ const AddRoomForm = ({
                                             name='image'
                                             id='image'
                                             onChange={(e) => handleImage(e.target.files[0])}
-
                                             accept='image/*'
                                             hidden
                                         />
                                         <div className='bg-rose-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
-                                                                 {/* {imageText} */}
-                      {imageText.length > 20
-                        ? imageText.split('.')[0].slice(0, 15) +
-                          '....' +
-                          imageText.split('.')[1]
-                        : imageText}
-
-
+                                            {/* {imageText} */}
+                                            {imageText.length > 20
+                                                ? imageText.split('.')[0].slice(0, 15) +
+                                                '....' +
+                                                imageText.split('.')[1]
+                                                : imageText}
                                         </div>
                                     </label>
                                 </div>
@@ -128,7 +122,6 @@ const AddRoomForm = ({
                                     required
                                 />
                             </div>
-
                             <div className='space-y-1 text-sm'>
                                 <label htmlFor='guest' className='block text-gray-600'>
                                     Total guest
@@ -143,7 +136,6 @@ const AddRoomForm = ({
                                 />
                             </div>
                         </div>
-
                         <div className='flex justify-between gap-2'>
                             <div className='space-y-1 text-sm'>
                                 <label htmlFor='bedrooms' className='block text-gray-600'>
@@ -172,12 +164,10 @@ const AddRoomForm = ({
                                 />
                             </div>
                         </div>
-
                         <div className='space-y-1 text-sm'>
                             <label htmlFor='description' className='block text-gray-600'>
                                 Description
                             </label>
-
                             <textarea
                                 id='description'
                                 className='block rounded-md focus:rose-300 w-full h-32 px-4 py-3 text-gray-800  border border-rose-300 focus:outline-rose-500 '
@@ -186,16 +176,23 @@ const AddRoomForm = ({
                         </div>
                     </div>
                 </div>
-
                 <button
+                disabled={loading}
                     type='submit'
                     className='w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-rose-500'
                 >
-                    Save & Continue
+                 {loading ? <PiSpinnerBallFill className='animate-spin m-auto' /> : 'Save & Continue'}
                 </button>
             </form>
         </div>
     )
 }
-
+AddRoomForm.propTypes = {
+    dates: PropTypes.object.isRequired,
+    handleDates: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    imagePreview: PropTypes.string,
+    handleImage: PropTypes.func.isRequired,
+    imageText: PropTypes.string
+};
 export default AddRoomForm
