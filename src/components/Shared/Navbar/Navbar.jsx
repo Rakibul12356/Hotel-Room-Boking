@@ -24,7 +24,9 @@ const Navbar = () => {
                 height='100'
               />
             </Link>
+            
             {/* Dropdown Menu */}
+
             <div className='relative'>
               <div className='flex flex-row items-center gap-3'>
                 {/* Become A Host btn */}
@@ -69,6 +71,12 @@ const Navbar = () => {
 
                     {user ? (
                       <>
+                      <Link
+                      to='/dashboard'
+                      className='block  px-4 py-3 hover:bg-neutral-100 transition font-semibold'
+                    >
+                      Dashboard
+                    </Link>
                         <div
                           onClick={logOut}
                           className='px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer'

@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
-import axios from 'axios'
+
 import toast from 'react-hot-toast'
 import { TbFidgetSpinner } from "react-icons/tb";
+import { imageUpload } from '../../api/utils'
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -15,18 +16,12 @@ const SignUp = () => {
     const email = from.email.value
     const password = from.password.value
     const image = from.image.files[0]
-    const formData = new FormData()
-    formData.append('image', image)
-    console.log(name, email, password, image)
-
+   
     try {
       setLoading(true)
       //1Upload image and get image
-      const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
-        formData
-      )
-      console.log(data)
-      const imageUrl = data.data.display_url
+      
+      const imageUrl =await imageUpload(image)
       console.log(imageUrl)
       //2Create user with email and password
       // eslint-disable-next-line no-unused-vars
