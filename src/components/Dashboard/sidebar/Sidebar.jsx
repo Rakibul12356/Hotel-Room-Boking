@@ -15,14 +15,18 @@ import ToggleBtn from '../../Shared/Button/ToggleBtn'
 const Sidebar = () => {
     const { logOut } = useAuth()
     const [isActive, setActive] = useState(false)
-    const [role] = useRole()
-    console.log(role)
+    const [toggle, setToggle] = useState(true)
+    const [role,isLoading] = useRole()
+    console.log(role,isLoading)
 
     // Sidebar Responsive Handler
     const handleToggle = () => {
         setActive(!isActive)
     }
-    const toggleHandler = () => {}
+    const toggleHandler = (event) => {
+        console.log(event.target.checked) 
+        setToggle(event.target.checked)
+    }
     return (
         <>
             {/* Small Screen Navbar */}
@@ -72,14 +76,14 @@ const Sidebar = () => {
                     {/* Nav Items */}
                     <div className='flex flex-col justify-between flex-1 mt-6'>
                         {/* Conditional toggle button here.. */}
-                        {role==='host'&&<ToggleBtn toggleHandler={toggleHandler}/>}
+                        {role === 'host' && <ToggleBtn toggleHandler={toggleHandler} toggle={toggle}/>}
 
                         {/*  Menu Items */}
                         <nav>
                             {/* Statistics */}
                             <MenuItem label="Statistics" address={"/dashboard"} icon={BsGraphUp} />
                             {role === 'guest' && <GuestMenu />}
-                            {role === 'host' && <HostMenu />}
+                            {role === 'host' ? toggle? <HostMenu /> : <GuestMenu />:undefined}
                             {role === 'admin' && <AdminMenu />}
 
 
