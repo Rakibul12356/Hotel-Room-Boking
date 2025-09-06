@@ -21,8 +21,6 @@ const RoomDetails = () => {
     }
 
   });
-  console.log('room:', room);
-
   if (isLoading) return <LoadingSpinner />;
   return (
     <Container>
